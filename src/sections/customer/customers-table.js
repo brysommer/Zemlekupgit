@@ -12,7 +12,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typographycustomer
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
@@ -56,7 +56,7 @@ export const CustomersTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Параметри ділянки
                 </TableCell>
                 <TableCell>
                   Email

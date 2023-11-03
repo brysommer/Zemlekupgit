@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -10,6 +10,9 @@ import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CustomersTable } from 'src/sections/customer/customers-table';
 import { CustomersSearch } from 'src/sections/customer/customers-search';
 import { applyPagination } from 'src/utils/apply-pagination';
+import axios from 'axios';
+
+
 
 const now = new Date();
 
@@ -156,6 +159,8 @@ const data = [
   }
 ];
 
+
+
 const useCustomers = (page, rowsPerPage) => {
   return useMemo(
     () => {
@@ -175,11 +180,25 @@ const useCustomerIds = (customers) => {
 };
 
 const Page = () => {
+  const [lots, setLots] = useState([]);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const customers = useCustomers(page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/lots')
+    .then(response => {
+        console.log(response.data)
+        setLots(response.data);
+    })
+    .catch(error => {
+      console.error('Помилка при отриманні даних: ', error);
+    });
+  })
+  
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -194,7 +213,6 @@ const Page = () => {
     },
     []
   );
-
   return (
     <>
       <Head>
