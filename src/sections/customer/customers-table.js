@@ -12,7 +12,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typographycustomer
+  Typography
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
