@@ -13,10 +13,46 @@ import { applyPagination } from 'src/utils/apply-pagination';
 import axios from 'axios';
 
 
-
 const now = new Date();
 
-const data = [
+
+
+const LotArray = () => {
+  const [lots, setLots] = React.useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/lots')
+      .then(response => {
+        console.log(response.data);
+        setLots(response.data);
+      })
+      .catch(error => {
+        console.error('Помилка при отриманні даних: ', error);
+      });
+  }, []); 
+
+const lot = lots.length > 0 ? lots[0] : null;
+}
+
+const lotModel = lot.map((lot) => {
+  return {
+    id: lot.id,
+    address: {
+      city: lot.region,
+      country: lot.tenant,
+      state: lot.state,
+      street: lot.cadastral_number,
+    },
+    avatar: '/assets/avatars/avatar-carson-darrin.png',
+    createdAt:  subDays(subHours(now, 11), 2).getTime(),
+    email: `${lot.area} ${lot.price} ${lot.revenue}`,
+    name: lot.lot_status,
+    phone: `${lot.user_name} ${lot.contact} ${lot.user_id}`,
+  }
+})
+console.log(lotModel)
+
+let data = [
   {
     id: '5e887ac47eed253091be10cb',
     address: {
@@ -32,104 +68,6 @@ const data = [
     phone: '304-428-3097'
   },
   {
-    id: '5e887b209c28ac3dd97f6db5',
-    address: {
-      city: 'Atlanta',
-      country: 'USA',
-      state: 'Georgia',
-      street: '1865  Pleasant Hill Road'
-    },
-    avatar: '/assets/avatars/avatar-fran-perez.png',
-    createdAt: subDays(subHours(now, 1), 2).getTime(),
-    email: 'fran.perez@devias.io',
-    name: 'Fran Perez',
-    phone: '712-351-5711'
-  },
-  {
-    id: '5e887b7602bdbc4dbb234b27',
-    address: {
-      city: 'North Canton',
-      country: 'USA',
-      state: 'Ohio',
-      street: '4894  Lakeland Park Drive'
-    },
-    avatar: '/assets/avatars/avatar-jie-yan-song.png',
-    createdAt: subDays(subHours(now, 4), 2).getTime(),
-    email: 'jie.yan.song@devias.io',
-    name: 'Jie Yan Song',
-    phone: '770-635-2682'
-  },
-  {
-    id: '5e86809283e28b96d2d38537',
-    address: {
-      city: 'Madrid',
-      country: 'Spain',
-      name: 'Anika Visser',
-      street: '4158  Hedge Street'
-    },
-    avatar: '/assets/avatars/avatar-anika-visser.png',
-    createdAt: subDays(subHours(now, 11), 2).getTime(),
-    email: 'anika.visser@devias.io',
-    name: 'Anika Visser',
-    phone: '908-691-3242'
-  },
-  {
-    id: '5e86805e2bafd54f66cc95c3',
-    address: {
-      city: 'San Diego',
-      country: 'USA',
-      state: 'California',
-      street: '75247'
-    },
-    avatar: '/assets/avatars/avatar-miron-vitold.png',
-    createdAt: subDays(subHours(now, 7), 3).getTime(),
-    email: 'miron.vitold@devias.io',
-    name: 'Miron Vitold',
-    phone: '972-333-4106'
-  },
-  {
-    id: '5e887a1fbefd7938eea9c981',
-    address: {
-      city: 'Berkeley',
-      country: 'USA',
-      state: 'California',
-      street: '317 Angus Road'
-    },
-    avatar: '/assets/avatars/avatar-penjani-inyene.png',
-    createdAt: subDays(subHours(now, 5), 4).getTime(),
-    email: 'penjani.inyene@devias.io',
-    name: 'Penjani Inyene',
-    phone: '858-602-3409'
-  },
-  {
-    id: '5e887d0b3d090c1b8f162003',
-    address: {
-      city: 'Carson City',
-      country: 'USA',
-      state: 'Nevada',
-      street: '2188  Armbrester Drive'
-    },
-    avatar: '/assets/avatars/avatar-omar-darboe.png',
-    createdAt: subDays(subHours(now, 15), 4).getTime(),
-    email: 'omar.darobe@devias.io',
-    name: 'Omar Darobe',
-    phone: '415-907-2647'
-  },
-  {
-    id: '5e88792be2d4cfb4bf0971d9',
-    address: {
-      city: 'Los Angeles',
-      country: 'USA',
-      state: 'California',
-      street: '1798  Hickory Ridge Drive'
-    },
-    avatar: '/assets/avatars/avatar-siegbert-gottfried.png',
-    createdAt: subDays(subHours(now, 2), 5).getTime(),
-    email: 'siegbert.gottfried@devias.io',
-    name: 'Siegbert Gottfried',
-    phone: '702-661-1654'
-  },
-  {
     id: '5e8877da9a65442b11551975',
     address: {
       city: 'Murray',
@@ -143,23 +81,9 @@ const data = [
     name: 'Iulia Albu',
     phone: '313-812-8947'
   },
-  {
-    id: '5e8680e60cba5019c5ca6fda',
-    address: {
-      city: 'Salt Lake City',
-      country: 'USA',
-      state: 'Utah',
-      street: '368 Lamberts Branch Road'
-    },
-    avatar: '/assets/avatars/avatar-nasimiyu-danai.png',
-    createdAt: subDays(subHours(now, 1), 9).getTime(),
-    email: 'nasimiyu.danai@devias.io',
-    name: 'Nasimiyu Danai',
-    phone: '801-301-7894'
-  }
 ];
 
-
+data = lotModel
 
 const useCustomers = (page, rowsPerPage) => {
   return useMemo(
@@ -179,6 +103,30 @@ const useCustomerIds = (customers) => {
   );
 };
 
+// const lot = 
+//   [
+//     {
+//       id:1,
+//       area:4.12,
+//       price: 350000,
+//       revenue: 6.29,
+//       cadastral_number: "5320682800:00:003:0078",
+//       state: "Полтавська",
+//       region: "Кременчуцький",
+//       tenant: "ULF",
+//       lease_term: 15,
+//       lot_status: "reserve",
+//       message_id: null,
+//       user_id: 269694206,
+//       user_name: "@Jeka",
+//       contact: null,
+//       lotNumber: 2,
+//       bot_id: "7424184100020000389",
+//       createdAt: "2023-11-03T19:14:25.358Z",
+//       updatedAt: "2023-11-03T19:14:33.027Z"
+//     }
+//   ]
+
 const Page = () => {
   const [lots, setLots] = useState([]);
 
@@ -187,18 +135,6 @@ const Page = () => {
   const customers = useCustomers(page, rowsPerPage);
   const customersIds = useCustomerIds(customers);
   const customersSelection = useSelection(customersIds);
-
-  useEffect(() => {
-    axios.get('http://localhost:3001/api/lots')
-    .then(response => {
-        console.log(response.data)
-        setLots(response.data);
-    })
-    .catch(error => {
-      console.error('Помилка при отриманні даних: ', error);
-    });
-  })
-  
 
   const handlePageChange = useCallback(
     (event, value) => {
